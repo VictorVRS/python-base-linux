@@ -1,16 +1,28 @@
 #!usr/bin/env python3
-
 import sys
 import os
 
-if os.path.exists("names.txt"):
-    names = open("names.txt").readlines()
-else:
-    print("File not found") 
-    sys.exit(1)   
+#EAFP - Easy to Ask to Forgiveness than Permission
 
-if len(names) >= 3:
-    print(names[2])
+#try:
+#   raise RunTimeError("Ocorreu um erro")
+#   print(str{e})
+
+
+
+try:
+    names = open("names.txt").readlines()
+except FileNotFoundError as e:
+    print(f"{str(e)}.") 
+    sys.exit(1)   
 else:
+    print("Sucesso")
+finally:
+    print("execute isso sempre")
+        
+
+try:
+    print(names[2])
+except:
     print("[ERROR] Missing lines")    
     sys.exit(1)
