@@ -10,6 +10,23 @@
 import os
 import sys
 from datetime import datetime
+import logging
+from logging import handlers
+log_level = os.getenv("LOG_LEVEL", "WARNING").upper()
+log = logging.Logger("victor", log_level)
+fh = handlers.RotatingFileHandler(
+    "logprefix.log",
+    maxBytes=500, #10**6
+    backupCount=10,
+)
+fh.setLevel(log_level)
+fmt = logging.Formatter(
+    '%(asctime)s %(name)s %(levelname)s'
+    'l:%(lineno)d f:%(filename)s: %(message)s'
+)
+
+fh.setFormatter(fmt)
+log.addHandler(fh)
 
 arguments = sys.argv[1:]
 
@@ -19,7 +36,7 @@ if not arguments:
     n2 = input("n2:")
     arguments = [operation, n1, n2]
     
-if len(arguments)!=3:
+elif len(arguments)!=3:
     print("numero Inválido")
     print("soma 5 5")
     sys.exit(1)
@@ -42,8 +59,11 @@ for num in nums:
     else:
         num = int(num)
     validated_nums.append(num)
-        
-n1, n2 = validated_nums
+try:        
+    n1, n2 = validated_nums
+except ValueError as e:
+    print(str(e))
+    sys.exit(1)    
 
 if operation == "sum":
     result = n1 + n2
@@ -54,18 +74,23 @@ elif operation == "mul":
 elif operation == "div":
     result = n1 / n2
 
-path = os.curdir
+path = "/"
 filepath = os.path.join(path,"prefix.log")
 timestamp = datetime.now().isoformat()
 user = os.getenv('USER', 'anonymous')
 
-with open(filepath, "a") as file_:
-    file_.write(f"{timestamp} - {user} - {operation}, {n1}, {n2} = {result}\n")
+print(f"O resultado é {result}:")
+
+try:
+    with open(filepath, "a") as file_:
+        file_.write(f"{timestamp} - {user} - {operation}, {n1}, {n2} = {result}\n")
+except PermissionError as e:
+    log.error(str(e))
+    sys.exit(1)
 
 
 
-
-print(f"O resultado é {result}:")    
+    
    
             
         

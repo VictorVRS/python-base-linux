@@ -21,13 +21,34 @@ __license__ = "Unlicense"
 
 import os
 import sys
+import logging
+
+log_level = os.getenv("LOG_LEVEL", "WARNING").upper()
+log = logging.Logger("victor", log_level)
+ch = logging.StreamHandler()
+ch.setLevel(log_level)
+fmt = logging.Formatter(
+    '%(asctime)s %(name)s %(levelname)s'
+    'l:%(lineno)d f:%(filename)s: %(message)s'
+)
+ch.setFormatter(fmt)
+log.addHandler(ch)
 
 arguments = {
     "lang": None,
     "count": 1,
 }
 for arg in sys.argv[1:]:
-    key, value = arg.split("=")
+    try:
+        key, value = arg.split("=")
+    except ValueError as e:
+        log.error(
+            "You use %s to split"
+            "You need use '=' to split key and value",
+            arg,
+            str(e)
+            )
+        sys.exit(1)
     key = key.lstrip("-").strip()
     value = value.strip()
     if key not in arguments:
@@ -52,6 +73,14 @@ msg = {
     "it_IT":"Ciao,Mondo!",
     "es_SP":"Hola, Mundo!",
     "fr_FR":"Bonjour, Monde!",}
+
+try:
+    message = msg[current_language]
+except KeyError as e:
+    print(f"[ERROR]{str(e)}")
+    print(f"[ERROR] Invalid language!\n")
+    print(f"Please choose a Language:{list(msg.keys())}")    
+    sys.exit(1)
 
 print(msg[current_language] * int(arguments["count"]))        
 
