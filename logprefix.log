@@ -1,0 +1,2 @@
+2023-11-30 10:07:23,911 victor ERRORl:88 f:prefix.py: Deu erro {"[Errno 13] Permission denied: '/prefix.log'"}
+2023-11-30 10:16:02,840 victor ERRORl:88 f:prefix.py: [Errno 13] Permission denied: '/prefix.log'

@@ -1,0 +1,4 @@
+Victor,3,12
+kika, 4, 4
+Ethan, 1, 4
+Maria, 2, 7
